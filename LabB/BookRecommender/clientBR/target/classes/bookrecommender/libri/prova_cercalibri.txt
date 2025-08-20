@@ -1,0 +1,358 @@
+package bookrecommender.libri;
+
+import bookrecommender.condivisi.libri.CercaLibriService;
+import bookrecommender.condivisi.libri.Libro;
+import bookrecommender.utili.ViewsController;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+/**
+ * Controller adattato alla firma reale di CercaLibriService.
+ *
+ * Nota importante:
+ *  - I metodi cercaLibro_Per_Titolo / cercaLibro_Per_Autore / cercaLibro_Per_Autore_e_Anno
+ *    sono void (secondo l'interfaccia). Quindi il server NON restituisce direttamente i risultati
+ *    come valore di ritorno. Questo controller invia la richiesta al server e notifica l'utente.
+ *    Se vuoi invece ottenere liste direttamente sul client, devi cambiare le firme dell'interfaccia.
+ */
+public class CercaLibriController implements Initializable {
+
+    private static final Logger logger = LogManager.getLogger(CercaLibriController.class);
+
+    private CercaLibriService cercaLibriService;
+
+    /* --- campi FXML --- */
+    @FXML private TextField textFieldID;
+    @FXML private TextField textFieldTitolo;
+    @FXML private TextField textFieldAutore;
+    @FXML private TextField textFieldAnno;
+
+    @FXML private ToggleGroup searchModeGroup;
+    @FXML private RadioButton rbById;
+    @FXML private RadioButton rbByTitle;
+    @FXML private RadioButton rbByAuthor;
+    @FXML private RadioButton rbByAuthorYear;
+
+    @FXML private HBox idBox;
+    @FXML private HBox titleBox;
+    @FXML private HBox authorBox;
+    @FXML private HBox authorYearBox;
+
+    @FXML private Label messageLabel;
+    @FXML private Button searchButton;
+    @FXML private Button clearButton;
+    @FXML private Button backButton;
+
+    @FXML private TableView<BookRecord> resultsTable;
+    @FXML private TableColumn<BookRecord, String> colId;
+    @FXML private TableColumn<BookRecord, String> colTitle;
+    @FXML private TableColumn<BookRecord, String> colAuthor;
+    @FXML private TableColumn<BookRecord, String> colYear;
+
+    // Demo data (fallback locale)
+    private final List<BookRecord> demoData = new ArrayList<>();
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        initServices();
+        logger.debug("Inizializzazione CercaLibriController");
+
+        // Configuro colonne TableView
+        if (colId != null)    colId.setCellValueFactory(cell -> cell.getValue().idProperty());
+        if (colTitle != null) colTitle.setCellValueFactory(cell -> cell.getValue().titleProperty());
+        if (colAuthor != null)colAuthor.setCellValueFactory(cell -> cell.getValue().authorProperty());
+        if (colYear != null)  colYear.setCellValueFactory(cell -> cell.getValue().yearProperty());
+
+        // Toggle listener
+        if (searchModeGroup != null) {
+            searchModeGroup.selectedToggleProperty().addListener((obs, oldT, newT) -> updateMode());
+        }
+
+        // Demo fallback
+        demoData.add(new BookRecord("1", "Il nome della rosa", "Umberto Eco", "1980"));
+        demoData.add(new BookRecord("2", "La coscienza di Zeno", "Italo Svevo", "1923"));
+
+        updateMode();
+        if (messageLabel != null) messageLabel.setText("Seleziona modalità e premi Cerca");
+    }
+
+    private void initServices() {
+        try {
+            Registry registry = LocateRegistry.getRegistry("localhost");
+            cercaLibriService = (CercaLibriService) registry.lookup("CercaLibriService");
+            logger.info("CercaLibriService inizializzato correttamente");
+        } catch (NotBoundException | RemoteException e) {
+            logger.error("Impossibile inizializzare CercaLibriService", e);
+            showAlert(Alert.AlertType.ERROR,
+                    "Servizio non disponibile",
+                    "Il servizio di ricerca libri non è raggiungibile.",
+                    "Controlla che il server RMI sia in funzione e che il nome \"CercaLibriService\" sia registrato.");
+            if (searchButton != null) searchButton.setDisable(true);
+            // lascia cercaLibriService a null → useremo demoData come fallback dove opportuno
+        }
+    }
+
+    private void updateMode() {
+        if (searchModeGroup == null) return;
+        Toggle selected = searchModeGroup.getSelectedToggle();
+        boolean byId = (selected == rbById);
+        boolean byTitle = (selected == rbByTitle);
+        boolean byAuthor = (selected == rbByAuthor);
+        boolean byAuthorYear = (selected == rbByAuthorYear);
+
+        if (idBox != null)    { idBox.setVisible(byId); idBox.setManaged(byId); }
+        if (titleBox != null) { titleBox.setVisible(byTitle); titleBox.setManaged(byTitle); }
+        if (authorBox != null){ authorBox.setVisible(byAuthor); authorBox.setManaged(byAuthor); }
+        if (authorYearBox != null){ authorYearBox.setVisible(byAuthorYear); authorYearBox.setManaged(byAuthorYear); }
+
+        if (messageLabel != null) messageLabel.setText("");
+    }
+
+    @FXML
+    private void onSearch(ActionEvent event) {
+        if (searchModeGroup == null) {
+            showMessage("Nessuna modalità di ricerca definita.");
+            return;
+        }
+
+        Toggle selected = searchModeGroup.getSelectedToggle();
+        if (selected == null) {
+            showMessage("Seleziona prima una modalità di ricerca.");
+            return;
+        }
+
+        try {
+            // Per ID: il service fornisce direttamente un Libro (getTitoloLibroById)
+            if (selected == rbById) {
+                String idText = safeGet(textFieldID);
+                if (idText.isEmpty()) { showMessage("Inserisci l'ID."); return; }
+                int id;
+                try {
+                    id = Integer.parseInt(idText);
+                } catch (NumberFormatException nfe) {
+                    showMessage("L'ID deve essere un numero intero.");
+                    return;
+                }
+
+                if (cercaLibriService != null) {
+                    Libro libro = cercaLibriService.getTitoloLibroById(id);
+                    if (libro != null) {
+                        List<BookRecord> single = new ArrayList<>();
+                        single.add(mapLibroToRecord(libro));
+                        resultsTable.setItems(FXCollections.observableArrayList(single));
+                        showMessage("Trovato 1 risultato.");
+                    } else {
+                        resultsTable.getItems().clear();
+                        showMessage("Nessun libro trovato con ID " + id);
+                    }
+                } else {
+                    // fallback demo
+                    List<BookRecord> res = performSearchDemoById(String.valueOf(id));
+                    resultsTable.setItems(FXCollections.observableArrayList(res));
+                    showMessage(res.isEmpty() ? "Nessun risultato (demo)." : "Trovati " + res.size() + " risultato(i) (demo).");
+                }
+
+                return; // fine gestione ID
+            }
+
+            // Per Titolo: l'interfaccia è void -> invia richiesta al server (nessun risultato diretto)
+            if (selected == rbByTitle) {
+                String titolo = safeGet(textFieldTitolo);
+                if (titolo.isEmpty()) { showMessage("Inserisci un titolo o parte di esso."); return; }
+
+                if (cercaLibriService != null) {
+                    // metodo void: invia la richiesta al server
+                    cercaLibriService.cercaLibro_Per_Titolo(titolo);
+                    // Non possiamo ottenere risultati direttamente (interfaccia è void)
+                    showAlert(Alert.AlertType.INFORMATION,
+                            "Richiesta inviata",
+                            "Ricerca per titolo inviata al server",
+                            "Il servizio non restituisce i risultati direttamente. Controlla il canale previsto per i risultati (es. callback).");
+                } else {
+                    List<BookRecord> res = performSearchDemoByTitle(titolo);
+                    resultsTable.setItems(FXCollections.observableArrayList(res));
+                    showMessage(res.isEmpty() ? "Nessun risultato (demo)." : "Trovati " + res.size() + " risultato(i) (demo).");
+                }
+                return;
+            }
+
+            // Per Autore
+            if (selected == rbByAuthor) {
+                String autore = safeGet(textFieldAutore);
+                if (autore.isEmpty()) { showMessage("Inserisci autore."); return; }
+
+                if (cercaLibriService != null) {
+                    cercaLibriService.cercaLibro_Per_Autore(autore);
+                    showAlert(Alert.AlertType.INFORMATION,
+                            "Richiesta inviata",
+                            "Ricerca per autore inviata al server",
+                            "Il servizio non restituisce i risultati direttamente. Controlla il canale previsto per i risultati (es. callback).");
+                } else {
+                    List<BookRecord> res = performSearchDemoByAuthor(autore);
+                    resultsTable.setItems(FXCollections.observableArrayList(res));
+                    showMessage(res.isEmpty() ? "Nessun risultato (demo)." : "Trovati " + res.size() + " risultato(i) (demo).");
+                }
+                return;
+            }
+
+            // Per Autore + Anno
+            if (selected == rbByAuthorYear) {
+                String autore = safeGet(textFieldAutore);
+                String anno = safeGet(textFieldAnno);
+                if (autore.isEmpty()) { showMessage("Inserisci autore."); return; }
+                if (!isValidYear(anno)) { showMessage("Inserisci un anno valido (YYYY)."); return; }
+
+                if (cercaLibriService != null) {
+                    cercaLibriService.cercaLibro_Per_Autore_e_Anno(autore, anno);
+                    showAlert(Alert.AlertType.INFORMATION,
+                            "Richiesta inviata",
+                            "Ricerca per autore+anno inviata al server",
+                            "Il servizio non restituisce i risultati direttamente. Controlla il canale previsto per i risultati (es. callback).");
+                } else {
+                    List<BookRecord> res = performSearchDemoByAuthorAndYear(autore, anno);
+                    resultsTable.setItems(FXCollections.observableArrayList(res));
+                    showMessage(res.isEmpty() ? "Nessun risultato (demo)." : "Trovati " + res.size() + " risultato(i) (demo).");
+                }
+                return;
+            }
+
+        } catch (RemoteException re) {
+            logger.error("Errore remoto durante la ricerca", re);
+            showAlert(Alert.AlertType.ERROR, "Errore remoto", "Errore durante la ricerca remota", re.getMessage());
+        } catch (Exception ex) {
+            logger.error("Errore durante la ricerca", ex);
+            showAlert(Alert.AlertType.ERROR, "Errore", "Si è verificato un errore durante la ricerca", ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void onClear(ActionEvent event) {
+        if (textFieldID != null) textFieldID.clear();
+        if (textFieldTitolo != null) textFieldTitolo.clear();
+        if (textFieldAutore != null) textFieldAutore.clear();
+        if (textFieldAnno != null) textFieldAnno.clear();
+        if (resultsTable != null) resultsTable.getItems().clear();
+        showMessage("");
+    }
+
+    @FXML
+    private void onBack(ActionEvent event) {
+        try {
+            ViewsController.mostraBenvenuti();
+        } catch (Exception ex) {
+            logger.warn("Impossibile tornare indietro con ViewsController", ex);
+            showAlert(Alert.AlertType.WARNING, "Navigazione", "Impossibile tornare alla schermata precedente", ex.getMessage());
+        }
+    }
+
+    /* ----------------------------
+       Demo search helpers
+       ---------------------------- */
+
+    private List<BookRecord> performSearchDemoById(String id) {
+        List<BookRecord> res = new ArrayList<>();
+        for (BookRecord b : demoData) if (b.getId().equals(id)) res.add(b);
+        return res;
+    }
+
+    private List<BookRecord> performSearchDemoByTitle(String titlePart) {
+        String q = titlePart.toLowerCase();
+        List<BookRecord> res = new ArrayList<>();
+        for (BookRecord b : demoData) if (b.getTitle().toLowerCase().contains(q)) res.add(b);
+        return res;
+    }
+
+    private List<BookRecord> performSearchDemoByAuthor(String authorPart) {
+        String q = authorPart.toLowerCase();
+        List<BookRecord> res = new ArrayList<>();
+        for (BookRecord b : demoData) if (b.getAuthor().toLowerCase().contains(q)) res.add(b);
+        return res;
+    }
+
+    private List<BookRecord> performSearchDemoByAuthorAndYear(String authorPart, String year) {
+        String q = authorPart.toLowerCase();
+        List<BookRecord> res = new ArrayList<>();
+        for (BookRecord b : demoData) if (b.getAuthor().toLowerCase().contains(q) && b.getYear().equals(year)) res.add(b);
+        return res;
+    }
+
+    /* ----------------------------
+       Mapping & helper utilities
+       ---------------------------- */
+
+    private BookRecord mapLibroToRecord(Libro libro) {
+       /* if (libro == null) return null;
+        String id = String.valueOf(libro.getId()); // supponendo Libro abbia getId()
+        String titolo = libro.getTitolo() != null ? libro.getTitolo() : "";
+        String autore = libro.getAutore() != null ? libro.getAutore() : "";
+        String anno = libro.getAnno() != null ? libro.getAnno() : "";
+        return new BookRecord(id, titolo, autore, anno);*/
+        return null;
+    }
+
+    private String safeGet(TextField t) {
+        if (t == null) return "";
+        String s = t.getText();
+        return s == null ? "" : s.trim();
+    }
+
+    private void showMessage(String msg) {
+        if (messageLabel != null) messageLabel.setText(msg);
+    }
+
+    private void showAlert(Alert.AlertType type, String title, String header, String content) {
+        Alert alert = new Alert(type);
+        alert.setTitle(title);
+        alert.setHeaderText(header);
+        alert.setContentText(content);
+        alert.initOwner(null);
+        alert.showAndWait();
+    }
+
+    private boolean isValidYear(String s) {
+        return s != null && s.matches("\\d{4}");
+    }
+
+    /* ----------------------------
+       POJO minimo per TableView
+       ---------------------------- */
+    public static class BookRecord {
+        private final javafx.beans.property.SimpleStringProperty id;
+        private final javafx.beans.property.SimpleStringProperty title;
+        private final javafx.beans.property.SimpleStringProperty author;
+        private final javafx.beans.property.SimpleStringProperty year;
+
+        public BookRecord(String id, String title, String author, String year) {
+            this.id = new javafx.beans.property.SimpleStringProperty(id);
+            this.title = new javafx.beans.property.SimpleStringProperty(title);
+            this.author = new javafx.beans.property.SimpleStringProperty(author);
+            this.year = new javafx.beans.property.SimpleStringProperty(year);
+        }
+
+        public String getId() { return id.get(); }
+        public String getTitle() { return title.get(); }
+        public String getAuthor() { return author.get(); }
+        public String getYear() { return year.get(); }
+
+        public javafx.beans.property.StringProperty idProperty() { return id; }
+        public javafx.beans.property.StringProperty titleProperty() { return title; }
+        public javafx.beans.property.StringProperty authorProperty() { return author; }
+        public javafx.beans.property.StringProperty yearProperty() { return year; }
+    }
+}
