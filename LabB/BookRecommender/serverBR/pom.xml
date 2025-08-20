@@ -48,7 +48,7 @@
     </dependencies>
 
     <build>
-        <sourceDirectory>src/java</sourceDirectory>
+        <sourceDirectory>src/java/bookrecommender/server</sourceDirectory>
         <plugins>
             <!-- Maven Compiler Plugin -->
             <plugin>
