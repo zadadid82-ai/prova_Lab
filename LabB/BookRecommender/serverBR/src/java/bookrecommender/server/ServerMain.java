@@ -2,6 +2,8 @@ package bookrecommender.server;
 
 import bookrecommender.condivisi.utenti.UtentiService;
 import bookrecommender.server.utenti.UtentiServiceImpl;
+import bookrecommender.condivisi.libri.CercaLibriService;
+import bookrecommender.server.libri.CercaLibriServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -98,8 +100,13 @@ public class ServerMain {
             UtentiService utentiService = new UtentiServiceImpl();
             reg.rebind("UtentiService", utentiService);
             
+            // Crea e registra il servizio CercaLibriService
+            CercaLibriService cercaLibriService = new CercaLibriServiceImpl();
+            reg.rebind("CercaLibriService", cercaLibriService);
+            
             logger.info("Servizio UtentiService registrato nel registro RMI");
-            System.out.println("Servizio RMI registrato: UtentiService");
+            logger.info("Servizio CercaLibriService registrato nel registro RMI");
+            System.out.println("Servizi RMI registrati: UtentiService, CercaLibriService");
             
         } catch (RemoteException e) {
             logger.error("Errore durante la creazione del registro RMI.", e);

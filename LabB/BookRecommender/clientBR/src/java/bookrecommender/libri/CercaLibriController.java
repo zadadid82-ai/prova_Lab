@@ -228,9 +228,12 @@ public class CercaLibriController implements Initializable {
         if (titolo.isEmpty()) { showMessage("Il titolo non può essere vuoto."); return; }
 
         if (cercaLibriService != null) {
-            // L'interfaccia RMI ha metodi void, quindi mostriamo solo una notifica.
-            cercaLibriService.cercaLibro_Per_Titolo(titolo);
-            showRequestSentAlert("Ricerca per titolo inviata al server.");
+            List<Libro> libri = cercaLibriService.cercaLibro_Per_Titolo(titolo);
+            List<BookRecord> results = libri.stream()
+                .map(this::mapLibroToRecord)
+                .collect(Collectors.toList());
+            resultsTable.setItems(FXCollections.observableArrayList(results));
+            showMessage(String.format("%d risultato/i trovato/i per titolo '%s'.", results.size(), titolo));
         } else {
             // Fallback Demo
             List<BookRecord> results = demoData.stream()
@@ -245,8 +248,12 @@ public class CercaLibriController implements Initializable {
         if (autore.isEmpty()) { showMessage("L'autore non può essere vuoto."); return; }
 
         if (cercaLibriService != null) {
-            cercaLibriService.cercaLibro_Per_Autore(autore);
-            showRequestSentAlert("Ricerca per autore inviata al server.");
+            List<Libro> libri = cercaLibriService.cercaLibro_Per_Autore(autore);
+            List<BookRecord> results = libri.stream()
+                .map(this::mapLibroToRecord)
+                .collect(Collectors.toList());
+            resultsTable.setItems(FXCollections.observableArrayList(results));
+            showMessage(String.format("%d risultato/i trovato/i per autore '%s'.", results.size(), autore));
         } else {
             // Fallback Demo
             List<BookRecord> results = demoData.stream()
@@ -264,8 +271,12 @@ public class CercaLibriController implements Initializable {
         if (!isValidYear(anno)) { showMessage("Inserisci un anno valido (es. 1984)."); return; }
 
         if (cercaLibriService != null) {
-            cercaLibriService.cercaLibro_Per_Autore_e_Anno(autore, anno);
-            showRequestSentAlert("Ricerca per autore e anno inviata al server.");
+            List<Libro> libri = cercaLibriService.cercaLibro_Per_Autore_e_Anno(autore, anno);
+            List<BookRecord> results = libri.stream()
+                .map(this::mapLibroToRecord)
+                .collect(Collectors.toList());
+            resultsTable.setItems(FXCollections.observableArrayList(results));
+            showMessage(String.format("%d risultato/i trovato/i per autore '%s' e anno '%s'.", results.size(), autore, anno));
         } else {
             // Fallback Demo
             List<BookRecord> results = demoData.stream()
@@ -310,14 +321,12 @@ public class CercaLibriController implements Initializable {
     }
     
     private BookRecord mapLibroToRecord(Libro libro) {
-        return null;
-       /*  if (libro == null) return null;
-        // Assumendo che l'oggetto Libro abbia questi getter. Adattali se necessario.
+        if (libro == null) return null;
         String id = String.valueOf(libro.getId());
         String titolo = libro.getTitolo() != null ? libro.getTitolo() : "N/D";
-        String autore = libro.getAutore() != null ? libro.getAutore() : "N/D";
+        String autore = libro.getAutori() != null ? libro.getAutori() : "N/D";
         String anno = libro.getAnno() != null ? libro.getAnno() : "N/D";
-        return new BookRecord(id, titolo, autore, anno);*/
+        return new BookRecord(id, titolo, autore, anno);
     }
 
     private String safeGet(TextField tf) {
@@ -330,13 +339,7 @@ public class CercaLibriController implements Initializable {
         }
     }
     
-    private void showRequestSentAlert(String header) {
-        showAlert(Alert.AlertType.INFORMATION,
-            "Richiesta Inviata",
-            header,
-            "Il servizio RMI non restituisce risultati diretti per questa operazione."
-        );
-    }
+
     
     private void showAlert(Alert.AlertType type, String title, String header, String content) {
         Alert alert = new Alert(type);

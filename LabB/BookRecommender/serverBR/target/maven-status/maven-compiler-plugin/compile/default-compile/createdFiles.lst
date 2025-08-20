@@ -1,12 +1,17 @@
-bookrecommender\server\libri\JdbcCercaLibriDAO.class
-libri\package-info.class
+<<<<<<< Current (Your changes)
 module-info.class
-bookrecommender\server\libri\LibroDAO.class
-utenti\package-info.class
 bookrecommender\server\utenti\UtentiDAO.class
-bookrecommender\server\utenti\UtentiServiceImpl.class
-bookrecommender\server\utili\DBUtil.class
-bookrecommender\server\utenti\JdbcUtentiDAO.class
-bookrecommender\server\libri\CercaLibriServiceImpl.class
-bookrecommender\server\ServerMain.class
-bookrecommender\server\utili\DBConnectionSingleton.class
+=======
+bookrecommender/server/libri/CercaLibriServiceImpl.class
+module-info.class
+libri/package-info.class
+bookrecommender/server/libri/LibroDAO.class
+utenti/package-info.class
+bookrecommender/server/utili/DBUtil.class
+bookrecommender/server/libri/JdbcCercaLibriDAO.class
+bookrecommender/server/utili/DBConnectionSingleton.class
+bookrecommender/server/ServerMain.class
+bookrecommender/server/utenti/UtentiServiceImpl.class
+bookrecommender/server/utenti/JdbcUtentiDAO.class
+bookrecommender/server/utenti/UtentiDAO.class
+>>>>>>> Incoming (Background Agent changes)
