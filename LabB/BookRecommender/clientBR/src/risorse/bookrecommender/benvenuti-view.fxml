@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  FXML per la schermata di benvenuto:
+  - Solo la schermata principale
+  - I pulsanti utilizzano ViewsController per navigare
+  - stylesheets="@styles.css" usa lo sfondo con cover definito nel CSS
+  - fx:controller = controller che gestisce solo la logica di benvenuto
+-->
+<StackPane xmlns="http://javafx.com/javafx/11.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="bookrecommender.utili.BenvenutiController"
+           fx:id="rootPane"
+           stylesheets="@styles.css"
+           prefHeight="600.0" prefWidth="900.0">
+
+    <!-- Contenuto principale impilato sopra lo sfondo (definito in CSS) -->
+    <children>
+
+        <!--
+            Contenitore verticale generale.
+            Solo la schermata principale è visibile.
+        -->
+        <VBox spacing="0" alignment="CENTER" prefWidth="Infinity">
+
+            <!-- Schermata principale -->
+            <VBox fx:id="mainContainer" alignment="CENTER" spacing="40" styleClass="main-container" visible="true" managed="true" prefHeight="700">
+                <padding>
+                    <Insets top="80" right="80" bottom="80" left="80" />
+                </padding>
+
+                <!-- Logo e titolo -->
+                <VBox alignment="CENTER" spacing="30">
+                    <Label fx:id="titleLabel" text="BookRecommender" styleClass="main-title"/>
+                    <Label fx:id="welcomeLabel" text="Scopri i tuoi prossimi libri preferiti" styleClass="subtitle"/>
+                </VBox>
+
+                <!-- Pulsanti principali: assegno fx:id per potervi aggiungere effetti dal controller -->
+                <VBox alignment="CENTER" spacing="25" maxWidth="420">
+                    <Button fx:id="loginButton" text="Accedi" onAction="#showLoginView" styleClass="primary-button"/>
+                    <Button fx:id="registerButton" text="Registrati" onAction="#showRegisterView" styleClass="secondary-button"/>
+                    <Button fx:id="searchButton" text="Cerca Libri" onAction="#showSearchView" styleClass="accent-button"/>
+                </VBox>
+
+                <!-- Footer -->
+                <VBox alignment="CENTER" spacing="15">
+                    <Label text="La tua libreria personale ti aspetta" styleClass="footer-text"/>
+                </VBox>
+            </VBox>
+
+        </VBox>
+    </children>
+</StackPane>

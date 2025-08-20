@@ -1,0 +1,372 @@
+/* ---------------------------
+   STYLES (aggiornato: sfondo nero + bordo fluorescente)
+   --------------------------- */
+
+/* Font base */
+* {
+    -fx-font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* Root: sfondo nero puro (rimuove il grigio) */
+.root {
+    -fx-background-color: #000000; /* nero puro */
+    /* Se vuoi mantenere comunque un'immagine di sfondo, commenta la riga sopra e
+       decommenta le righe qui sotto (aggiusta il percorso):
+    -fx-background-image: url("/images/bg.jpg");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center center;
+    -fx-background-size: cover;
+    -fx-background-color: linear-gradient(rgba(0,0,0,0.35), rgba(0,0,0,0.55));
+    */
+}
+
+/* Colore fluorescente usato per il bordo (ciano) */
+ /* Cambia qui se preferisci usare rosa o lime:
+    ciano: #00d8f0
+    rosa:  #ff2d55
+    lime:  #86d400
+*/
+:root {
+    /* non è realmente una variabile CSS per JavaFX, ma teniamo commento per riferimento */
+}
+
+/* Container principale e form:
+   - bordo fluorescente
+   - glow sottile (dropshadow) usando lo stesso colore per armonia
+*/
+.main-container, .form-container {
+    -fx-background-color: rgba(18, 22, 30, 0.88); /* card scura traslucida */
+    -fx-background-radius: 16;
+    -fx-padding: 24;
+
+    /* bordo fluorescente (ciano) */
+    -fx-border-color: rgba(0, 216, 240, 0.95); /* quasi pieno per contrasto */
+    -fx-border-width: 1.6;
+    -fx-border-radius: 16;
+
+    /* ombra/calma per profondità + glow leggero */
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.14), 18, 0.18, 0, 6),
+                 dropshadow(gaussian, rgba(0, 0, 0, 0.55), 12, 0.2, 0, 6);
+}
+
+/* Container principale con glow extra per distinguerlo */
+.main-container {
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.2), 24, 0.25, 0, 8),
+                 dropshadow(gaussian, rgba(0, 216, 240, 0.14), 18, 0.18, 0, 6),
+                 dropshadow(gaussian, rgba(0, 0, 0, 0.55), 12, 0.2, 0, 6);
+}
+
+/* Opzione: classe alternativa se vuoi bordo più evidente su alcuni contenitori */
+.container-fluoro {
+    -fx-border-color: rgba(0, 216, 240, 1.0);
+    -fx-border-width: 2.2;
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.22), 24, 0.2, 0, 8),
+                 dropshadow(gaussian, rgba(0, 0, 0, 0.55), 12, 0.2, 0, 6);
+}
+
+/* ---------------------------
+   TIPOGRAFIA
+   --------------------------- */
+
+.main-title {
+    -fx-font-size: 64px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.6), 16, 0.4, 0, 6),
+                 dropshadow(gaussian, rgba(0, 216, 240, 0.3), 24, 0.3, 0, 8),
+                 dropshadow(gaussian, rgba(0, 0, 0, 0.9), 12, 0.3, 0, 4);
+    -fx-letter-spacing: 3px;
+    -fx-font-family: 'Brush Script MT', 'Lucida Handwriting', 'Georgia', serif;
+    -fx-cursor: hand;
+}
+
+.main-title:hover {
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.8), 20, 0.5, 0, 8),
+                 dropshadow(gaussian, rgba(0, 216, 240, 0.4), 32, 0.4, 0, 12),
+                 dropshadow(gaussian, rgba(0, 0, 0, 0.95), 16, 0.4, 0, 6);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+/* Effetto di pulsazione sottile per il titolo */
+.main-title {
+    -fx-transition: all 0.3s ease-in-out;
+}
+
+/* Animazione di pulsazione continua */
+@keyframes titlePulse {
+    0% { -fx-opacity: 1.0; }
+    50% { -fx-opacity: 0.9; }
+    100% { -fx-opacity: 1.0; }
+}
+
+.main-title {
+    -fx-animation: titlePulse 4s ease-in-out infinite;
+}
+
+.subtitle {
+    -fx-font-size: 18px;
+    -fx-text-fill: #cfd6e4;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.55), 4, 0.2, 0, 1);
+    -fx-font-style: italic;
+    -fx-letter-spacing: 0.5px;
+}
+
+.form-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 6, 0.2, 0, 1);
+}
+
+/* ---------------------------
+   PULSANTI
+   --------------------------- */
+
+.primary-button {
+    -fx-background-color: #00d8f0;
+    -fx-text-fill: #081015;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 28;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.28), 14, 0.2, 0, 0);
+    -fx-min-width: 200;
+    -fx-min-height: 44;
+}
+.primary-button:hover { -fx-background-color: #2fe6ff; }
+.primary-button:pressed { -fx-background-color: #00bcd6; }
+
+.secondary-button {
+    -fx-background-color: #ff2d55;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 28;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(255, 45, 85, 0.28), 14, 0.2, 0, 0);
+    -fx-min-width: 200;
+    -fx-min-height: 44;
+}
+.secondary-button:hover { -fx-background-color: #ff4c70; }
+.secondary-button:pressed { -fx-background-color: #e6294c; }
+
+.accent-button {
+    -fx-background-color: #86d400;
+    -fx-text-fill: #071000;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-padding: 12 28;
+    -fx-background-radius: 20;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(134, 212, 0, 0.28), 14, 0.2, 0, 0);
+    -fx-min-width: 200;
+    -fx-min-height: 44;
+}
+.accent-button:hover { -fx-background-color: #a6f017; }
+.accent-button:pressed { -fx-background-color: #6fb400; }
+
+/* Pulsante testo (link) */
+.text-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #aab4c8;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-padding: 6 14;
+    -fx-border-color: transparent;
+    -fx-border-radius: 14;
+}
+.text-button:hover {
+    -fx-text-fill: #ffffff;
+    -fx-background-color: rgba(255,255,255,0.06);
+    -fx-background-radius: 14;
+}
+
+/* ---------------------------
+   CAMPI DI INPUT
+   --------------------------- */
+
+.input-field, .search-field {
+    -fx-background-color: #10151b;
+    -fx-text-fill: #e7ecf5;
+    -fx-background-radius: 12;
+    -fx-border-color: #222832;
+    -fx-border-radius: 12;
+    -fx-border-width: 2;
+    -fx-padding: 12 16;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #738099;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.25), 8, 0.15, 0, 2);
+}
+.input-field:focused, .search-field:focused {
+    -fx-border-color: #00d8f0; /* bordino ciano al focus per coerenza */
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.18), 10, 0.18, 0, 0);
+}
+
+.search-field { -fx-font-size: 15px; -fx-padding: 14 18; }
+
+/* ---------------------------
+   TAG E TESTI MINORI
+   --------------------------- */
+
+.tag-button {
+    -fx-background-color: #262d3a;
+    -fx-text-fill: #cfd6e4;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 14;
+    -fx-background-radius: 16;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 8, 0.15, 0, 0);
+    -fx-border-color: rgba(255, 255, 255, 0.05);
+    -fx-border-width: 1;
+    -fx-border-radius: 16;
+}
+.tag-button:hover {
+    -fx-background-color: #313a4b;
+    -fx-text-fill: #ffffff;
+    -fx-border-color: rgba(255, 255, 255, 0.08);
+}
+
+.suggestion-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: #aab4c8;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 3, 0.15, 0, 1);
+}
+
+.footer-text {
+    -fx-font-size: 13px;
+    -fx-text-fill: #7d889b;
+    -fx-font-style: italic;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 3, 0.15, 0, 1);
+}
+
+/* ---------------------------
+   ACCESSIBILITÀ / FOCUS
+   --------------------------- */
+
+.button:focused, .input-field:focused {
+    -fx-border-color: #00d8f0;
+    -fx-border-width: 2;
+    -fx-border-radius: 12;
+}
+
+/* Stati disabilitati */
+.button:disabled { -fx-opacity: 0.6; -fx-cursor: default; }
+.input-field:disabled { -fx-opacity: 0.6; -fx-background-color: #0c1116; }
+
+/* ---------------------------
+   STILE PER TOGGLE BUTTON (NUOVO)
+   --------------------------- */
+
+.search-mode-toggle .toggle-button-style {
+    -fx-background-color: transparent;
+    -fx-text-fill: #aab4c8;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 8 20;
+    -fx-border-color: #222832;
+    -fx-border-width: 2;
+    -fx-border-radius: 18;
+    -fx-cursor: hand;
+    -fx-background-radius: 18;
+}
+
+.search-mode-toggle .toggle-button-style:hover {
+    -fx-background-color: rgba(0, 216, 240, 0.1);
+    -fx-text-fill: #ffffff;
+}
+
+.search-mode-toggle .toggle-button-style:selected {
+    -fx-background-color: #00d8f0;
+    -fx-text-fill: #081015; /* Testo scuro per contrasto */
+    -fx-border-color: #00d8f0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 216, 240, 0.28), 14, 0.2, 0, 0);
+}
+
+/* ---------------------------
+   STILE PER TABLEVIEW (NUOVO)
+   --------------------------- */
+
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #222832;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-border-width: 2;
+}
+
+/* Header della tabella */
+.table-view .column-header-background {
+    -fx-background-color: rgba(18, 22, 30, 0.88);
+    -fx-background-radius: 10 10 0 0;
+    -fx-background-insets: 0 0 0 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #222832 transparent;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #aab4c8;
+}
+
+.table-view .column-header .label {
+    -fx-padding: 10;
+}
+
+/* Celle e righe della tabella */
+.table-view .table-cell {
+    -fx-text-fill: #e7ecf5;
+    -fx-border-color: transparent;
+    -fx-padding: 12;
+    -fx-font-size: 14px;
+}
+
+.table-row-cell {
+    -fx-background-color: #10151b;
+    -fx-background-insets: 0, 0 0 1 0;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #141a22;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: rgba(0, 216, 240, 0.15);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #00d8f0;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: #081015; /* Testo scuro su riga selezionata */
+}
+
+/* Placeholder quando la tabella è vuota */
+.table-view .placeholder .label {
+    -fx-text-fill: #aab4c8; /* Assicura che anche il testo del placeholder usi il colore giusto */
+}
+
+/* ---------------------------
+   STILE PER SCROLLBAR (NUOVO)
+   --------------------------- */
+
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar .thumb {
+    -fx-background-color: #222832;
+    -fx-background-radius: 8;
+}
+
+.table-view .scroll-bar .thumb:hover {
+    -fx-background-color: #00d8f0;
+}

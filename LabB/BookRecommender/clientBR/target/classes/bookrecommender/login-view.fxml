@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  FXML per la schermata di login:
+  - Form di accesso con username e password
+  - Pulsante per tornare al menu principale
+  - stylesheets="@styles.css" per la formattazione
+  - fx:controller = LoginController
+-->
+<StackPane xmlns="http://javafx.com/javafx/11.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="bookrecommender.utenti.LoginController"
+           stylesheets="@styles.css"
+           prefHeight="600.0" prefWidth="900.0">
+
+    <children>
+        <VBox alignment="CENTER" spacing="40" styleClass="form-container" prefHeight="700">
+            <padding>
+                <Insets top="80" right="80" bottom="80" left="80" />
+            </padding>
+
+            <VBox alignment="CENTER" spacing="30" maxWidth="420">
+                <Label text="Accedi al tuo account" styleClass="form-title"/>
+
+                <VBox spacing="25" maxWidth="320">
+                    <TextField fx:id="usernameField" promptText="Username" styleClass="input-field"/>
+                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
+                    <Button fx:id="loginSubmitButton" text="Accedi" onAction="#handleLogin" styleClass="primary-button"/>
+                </VBox>
+
+                <Button text="← Torna al menu" onAction="#onBackButtonClick" styleClass="text-button"/>
+            </VBox>
+        </VBox>
+    </children>
+</StackPane>

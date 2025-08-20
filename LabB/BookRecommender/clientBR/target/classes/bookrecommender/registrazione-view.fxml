@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<!--
+  FXML per la schermata di registrazione:
+  - Form di registrazione con tutti i campi utente
+  - Validazione password e conferma
+  - Pulsante per tornare al menu principale
+  - stylesheets="@styles.css" per la formattazione
+  - fx:controller = RegistrazioneController
+-->
+<StackPane xmlns="http://javafx.com/javafx/11.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="bookrecommender.utenti.RegistrazioneController"
+           stylesheets="@styles.css"
+           prefHeight="600.0" prefWidth="900.0">
+
+    <children>
+        <VBox alignment="CENTER" spacing="40" styleClass="form-container" prefHeight="700">
+            <padding>
+                <Insets top="60" right="80" bottom="60" left="80" />
+            </padding>
+
+            <VBox alignment="CENTER" spacing="30" maxWidth="420">
+                <Label text="Crea il tuo account" styleClass="form-title"/>
+
+                <VBox spacing="20" maxWidth="320">
+                    <TextField fx:id="textFieldNome" promptText="Nome" styleClass="input-field"/>
+                    <TextField fx:id="textFieldCognome" promptText="Cognome" styleClass="input-field"/>
+                    <TextField fx:id="textFieldCodiceFiscale" promptText="Codice Fiscale" styleClass="input-field"/>
+                    <TextField fx:id="textFieldEmail" promptText="Email" styleClass="input-field"/>
+                    <TextField fx:id="textFieldIDUtente" promptText="Username" styleClass="input-field"/>
+                    <PasswordField fx:id="passwordField" promptText="Password" styleClass="input-field"/>
+                    <PasswordField fx:id="passwordFieldRipetiPassword" promptText="Conferma Password" styleClass="input-field"/>
+                    
+                    <Button fx:id="registerSubmitButton" text="Registrati" onAction="#handleRegister" styleClass="primary-button"/>
+                </VBox>
+
+                <Button text="← Torna al menu" onAction="#onBackButtonClick" styleClass="text-button"/>
+            </VBox>
+        </VBox>
+    </children>
+</StackPane>

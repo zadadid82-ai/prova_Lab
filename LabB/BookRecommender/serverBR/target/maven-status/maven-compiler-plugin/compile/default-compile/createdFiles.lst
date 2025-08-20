@@ -1,0 +1,12 @@
+bookrecommender\server\libri\JdbcCercaLibriDAO.class
+libri\package-info.class
+module-info.class
+bookrecommender\server\libri\LibroDAO.class
+utenti\package-info.class
+bookrecommender\server\utenti\UtentiDAO.class
+bookrecommender\server\utenti\UtentiServiceImpl.class
+bookrecommender\server\utili\DBUtil.class
+bookrecommender\server\utenti\JdbcUtentiDAO.class
+bookrecommender\server\libri\CercaLibriServiceImpl.class
+bookrecommender\server\ServerMain.class
+bookrecommender\server\utili\DBConnectionSingleton.class
