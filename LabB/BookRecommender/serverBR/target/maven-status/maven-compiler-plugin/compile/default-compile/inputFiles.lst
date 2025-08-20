@@ -1,4 +1,3 @@
-<<<<<<< Current (Your changes)
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\libri\LibroDAO.java
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\libri\package-info.java
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\libri\JdbcCercaLibriDAO.java
@@ -11,17 +10,3 @@ C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\utili\DBUtil.java
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\ServerMain.java
 C:\Users\sarah\OneDrive\Documenti\GitHub\prova_Lab\LabB\BookRecommender\serverBR\src\java\bookrecommender\server\utenti\UtentiDAO.java
-=======
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/module-info.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/libri/package-info.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/libri/CercaLibriServiceImpl.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utenti/package-info.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/libri/LibroDAO.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utenti/UtentiDAO.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utili/DBConnectionSingleton.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utenti/UtentiServiceImpl.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/libri/JdbcCercaLibriDAO.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/ServerMain.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utenti/JdbcUtentiDAO.java
-/workspace/LabB/BookRecommender/serverBR/src/java/bookrecommender/server/utili/DBUtil.java
->>>>>>> Incoming (Background Agent changes)

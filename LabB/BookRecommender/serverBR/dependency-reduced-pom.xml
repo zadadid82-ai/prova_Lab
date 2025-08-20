@@ -7,7 +7,7 @@
   <version>1.0.0</version>
   <description>Server RMI per il sistema di raccomandazione libri</description>
   <build>
-    <sourceDirectory>src/java/bookrecommender/server</sourceDirectory>
+    <sourceDirectory>src/java</sourceDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>

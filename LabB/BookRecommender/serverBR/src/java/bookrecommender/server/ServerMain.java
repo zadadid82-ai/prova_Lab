@@ -106,7 +106,12 @@ public class ServerMain {
             
             logger.info("Servizio UtentiService registrato nel registro RMI");
             logger.info("Servizio CercaLibriService registrato nel registro RMI");
+<<<<<<< Current (Your changes)
             System.out.println("Servizi RMI registrati: UtentiService, CercaLibriService");
+=======
+            System.out.println("Servizio RMI registrato: UtentiService");
+            System.out.println("Servizio RMI registrato: CercaLibriService");
+>>>>>>> Incoming (Background Agent changes)
             
         } catch (RemoteException e) {
             logger.error("Errore durante la creazione del registro RMI.", e);
