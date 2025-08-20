@@ -1,18 +1,3 @@
-<<<<<<< Current (Your changes)
-bookrecommender\BookRecommender.class
-bookrecommender\utenti\LoginController.class
-bookrecommender\utili\ClientUtili.class
-bookrecommender\utili\ViewsController.class
-bookrecommender\utili\package-info.class
-bookrecommender\libri\package-info.class
-bookrecommender\libri\CercaLibriController.class
-bookrecommender\GUI.class
-bookrecommender\utili\BenvenutiController.class
-bookrecommender\utenti\AreaPrivataController.class
-bookrecommender\libri\CercaLibriController$BookRecord.class
-bookrecommender\utenti\package-info.class
-bookrecommender\utenti\RegistrazioneController.class
-=======
 bookrecommender/libri/package-info.class
 bookrecommender/utenti/RegistrazioneController.class
 bookrecommender/utili/ClientUtili.class
@@ -26,4 +11,3 @@ bookrecommender/libri/CercaLibriController$BookRecord.class
 bookrecommender/BookRecommender.class
 bookrecommender/utenti/AreaPrivataController.class
 bookrecommender/utili/ViewsController.class
->>>>>>> Incoming (Background Agent changes)
